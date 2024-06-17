@@ -25,38 +25,21 @@ namespace CppCLRWinFormsProject {
 		Form1(void)
 		{
 			InitializeComponent();
-			// Inicializa la semilla del generador de números aleatorios con el tiempo actual.
 			srand(time(NULL));
-
-			// Crea un objeto Graphics asociado al panel pnl donde se dibujará el juego.
-			panel = pnl->CreateGraphics();
-
-			// Inicializa el administrador de gráficos en búfer.
-			space = BufferedGraphicsManager::Current;
-
-			// Asigna un área de dibujo en búfer que coincide con las dimensiones del panel pnl.
-			// Allocate: que crea un nuevo objeto BufferedGraphics que encajará en un área específica 
-			//del control que proporcionas.
-			buffer = space->Allocate(panel, pnl->ClientRectangle);
-
-			// Carga una imagen del archivo "player.png" en un objeto Bitmap que se utilizará para representar al héroe.
 			bmpPlayer = gcnew Bitmap("assets/playerSprite.png");
 			bmpEnemy = gcnew Bitmap("assets/enemySprite.png");
-
-			// Carga una imagen del archivo "fondo.png" en un objeto Bitmap que se utilizará como fondo del juego.
 			bmpMap = gcnew Bitmap("assets/map.png");
 
-			// Crea una instancia de la clase player pasando el ancho y alto de un cuarto de la imagen del héroe.
-			// Esto se usa para dividir la imagen en cuatro partes para la animación.
+			panel = pnl->CreateGraphics();
+
+			space = BufferedGraphicsManager::Current;
+			buffer = space->Allocate(panel, pnl->ClientRectangle);
 			player = new Player(bmpPlayer->Width / 4, bmpPlayer->Height / 4);
 
 			sonido = gcnew Media::SoundPlayer();
 
 			gameService = new GameService();
 			gameService->createEnemies(bmpEnemy->Width / 4, bmpEnemy->Height / 4);
-			//
-			//TODO: Add the constructor code here
-			//
 		}
 
 	protected:
@@ -75,13 +58,13 @@ namespace CppCLRWinFormsProject {
 	private: System::ComponentModel::IContainer^ components;
 
 	private:
-		Graphics^ panel;                 // Objeto Graphics para dibujar en el panel.
-		BufferedGraphicsContext^ space;  // Contexto de gráficos en búfer.
-		BufferedGraphics^ buffer;        // Búfer de gráficos.
-		Bitmap^ bmpPlayer;                 // Imagen del héroe.
-		Bitmap^ bmpMap;                  // Imagen de fondo del juego.
+		Graphics^ panel;
+		BufferedGraphicsContext^ space;
+		BufferedGraphics^ buffer;
+		Bitmap^ bmpPlayer;
+		Bitmap^ bmpMap;
 		Bitmap^ bmpEnemy;
-		Player* player;                      // Instancia de la clase player para representar al héroe.
+		Player* player;
 
 
 		int indice = 0;
@@ -90,6 +73,7 @@ namespace CppCLRWinFormsProject {
 
 
 
+		   Media::SoundPlayer^ pasos;
 
 		   Media::SoundPlayer^ sonido;
 		   /// <summary>
@@ -139,15 +123,12 @@ namespace CppCLRWinFormsProject {
 		   }
 #pragma endregion
 	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e) {
-		// Limpia el búfer de gráficos con un color de fondo blanco.
-		buffer->Graphics->Clear(Color::WhiteSmoke);
+		buffer->Graphics->Clear(Color::DarkSlateGray);
 
-		// Dibuja la imagen de fondo en el búfer de gráficos.
-		buffer->Graphics->DrawImage(bmpMap, -250, 0, bmpMap->Width, bmpMap->Height );
+		buffer->Graphics->DrawImage(bmpMap, -250, 0, bmpMap->Width, bmpMap->Height);
 
 		gameService->moveEveryThing(buffer->Graphics);
 
-		// Dibuja al héroe en el búfer de gráficos.
 		player->draw(buffer->Graphics, bmpPlayer);
 		gameService->drawEveryThing(buffer->Graphics, bmpEnemy);
 
@@ -159,28 +140,34 @@ namespace CppCLRWinFormsProject {
 
 
 
-		// Renderiza el búfer en el panel.
 		buffer->Render(panel);
 
 	}
+
+
+
+	private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
+		sonido = gcnew SoundPlayer("assets/menuMusic.wav");
+		pasos = gcnew SoundPlayer("assets/step.wav");
+
+		sonido->Play();
+	}
+	private: System::Void pnl_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
+	}
 	private: System::Void Form1_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
-		// Maneja el evento KeyDown para mover al héroe en respuesta a las teclas presionadas.
 		switch (e->KeyCode)
 		{
 		case Keys::A:
-			// Mueve al héroe hacia la izquierda si la tecla 'A' es presionada.
 			player->move(buffer->Graphics, 'A');
+			pasos->Play();
 			break;
 		case Keys::D:
-			// Mueve al héroe hacia la derecha si la tecla 'D' es presionada.
 			player->move(buffer->Graphics, 'D');
 			break;
 		case Keys::S:
-			// Mueve al héroe hacia abajo si la tecla 'S' es presionada.
 			player->move(buffer->Graphics, 'S');
 			break;
 		case Keys::W:
-			// Mueve al héroe hacia arriba si la tecla 'W' es presionada.
 			player->move(buffer->Graphics, 'W');
 			break;
 		case Keys::P:
@@ -194,13 +181,6 @@ namespace CppCLRWinFormsProject {
 
 
 
-	}
-
-	private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
-		sonido = gcnew SoundPlayer("assets/menuMusic.wav");
-		sonido->Play();
-	}
-	private: System::Void pnl_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 	}
 	};
 }
