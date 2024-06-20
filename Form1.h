@@ -74,11 +74,10 @@ namespace CppCLRWinFormsProject {
 		Bitmap^ bmpMap;
 		Bitmap^ bmpEnemy;
 		Player* player;
-
+		Map *map;
 
 		int indice = 0;
 		GameService* gameService;
-	private: System::Windows::Forms::Panel^ pnl;
 
 
 
@@ -135,13 +134,13 @@ namespace CppCLRWinFormsProject {
 		buffer->Graphics->Clear(Color::Black);
 
 		//buffer->Graphics->DrawImage(bmpMap, 0, 0, bmpMap->Width/4, bmpMap->Height/4);
-		map->draw(buffer->Graphics, bmpMap, *player);
 
 		gameService->moveEveryThing(buffer->Graphics);
 
-		player->draw(buffer->Graphics, bmpPlayer);
 		
 		gameService->drawEveryThing(buffer->Graphics, bmpEnemy);
+		map->draw(buffer->Graphics, bmpMap, *player);
+		player->draw(buffer->Graphics, bmpPlayer);
 
 
 		if (gameService->getCountEnemiesDelete() == 3) {
@@ -172,15 +171,22 @@ namespace CppCLRWinFormsProject {
 		case Keys::A:
 			player->move(buffer->Graphics, 'A');
 			pasos->Play();
+			map->move(buffer->Graphics, *player);
 			break;
 		case Keys::D:
 			player->move(buffer->Graphics, 'D');
+			map->move(buffer->Graphics, *player);
+
 			break;
 		case Keys::S:
 			player->move(buffer->Graphics, 'S');
+			map->move(buffer->Graphics, *player);
+
 			break;
 		case Keys::W:
 			player->move(buffer->Graphics, 'W');
+			map->move(buffer->Graphics, *player);
+
 			break;
 		case Keys::P:
 			if (timer1->Enabled)timer1->Enabled = false;

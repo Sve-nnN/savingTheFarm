@@ -21,12 +21,6 @@ Enemy::Enemy(int width, int height) {
 	this->y = 0;
 	this->indexX = this->indexY = 0;
 	this->visibility = true;
-
-
-void Enemy::draw(Graphics^ panel, Bitmap^ image) {
-	Rectangle sectionShow = Rectangle(indexX * width, indexY * height, width, height);
-	Rectangle zoom = Rectangle(x, y, width, height);
-	panel->DrawImage(image, zoom, sectionShow, GraphicsUnit::Pixel);
 }
 
 void Enemy::move(Graphics^ panel) {
@@ -55,15 +49,10 @@ void Enemy::move(Graphics^ panel) {
 	if (indexX > 3)
 		indexX = 0;
 }
+void Enemy::draw(Graphics^ panel, Bitmap^ image) {}
 Rectangle Enemy::getRectangle() {
 	return Rectangle(x, y, width * 1.0, height * 1.0);
 }
 
-void Enemy::setVisibility(bool visibility) {
-	this->visibility = visibility;
-}
-bool Enemy::getVisibility() {
-	return visibility;
-}
 
 Enemy::~Enemy() {}

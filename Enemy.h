@@ -14,6 +14,9 @@ private:
 	int direction;
 public:
 	Enemy(int width, int height, int direction);
+	Enemy();
+	Enemy(int width, int height);
+
 	~Enemy();
 
 	void setVisibility(bool visiblity);
@@ -22,5 +25,5 @@ public:
 	void draw(Graphics^ panel, Bitmap^ image);
 	void move(Graphics^ panel);
 	Rectangle getRectangle();
+	
 };
-
