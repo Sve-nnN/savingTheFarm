@@ -12,6 +12,15 @@ Enemy::Enemy(int width, int height, int direction) {
 	this->indexX = indexY = 0;
 	this->visibility = true;
 }
+Enemy::Enemy() {}
+Enemy::Enemy(int width, int height) {
+	this->width = width;
+	this->height = height;
+	this->dx = this->dy = 20;
+	this->x = 10;
+	this->y = 0;
+	this->indexX = this->indexY = 0;
+	this->visibility = true;
 
 
 void Enemy::draw(Graphics^ panel, Bitmap^ image) {
@@ -24,11 +33,11 @@ void Enemy::move(Graphics^ panel) {
 	if (direction == 1) {
 		if (x + width * 1.0 > panel->VisibleClipBounds.Width || x < 0)
 			dx *= -1;
-		if (dx > 0) { 
+		if (dx > 0) {
 			indexY = 1;
 		}
-		else 
-			indexY = 3; 
+		else
+			indexY = 3;
 		x += dx;
 	}
 	else {
@@ -50,11 +59,11 @@ Rectangle Enemy::getRectangle() {
 	return Rectangle(x, y, width * 1.0, height * 1.0);
 }
 
-void Enemy::setVisibility(bool visibility) { 
-	this->visibility = visibility; 
+void Enemy::setVisibility(bool visibility) {
+	this->visibility = visibility;
 }
-bool Enemy::getVisibility() { 
-	return visibility; 
+bool Enemy::getVisibility() {
+	return visibility;
 }
 
 Enemy::~Enemy() {}

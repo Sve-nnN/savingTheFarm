@@ -41,6 +41,7 @@ void GameService::drawEveryThing(Graphics^ panel, Bitmap^ imagenEnemy) {
 	}
 }
 
+
 void GameService::moveEveryThing(Graphics^ panel) {
 	for (int i = 0; i < enemies.size(); i++)
 	{

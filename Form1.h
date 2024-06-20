@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include "GameService.h"
+#include "Map.h"
 #include <iostream>
 #include <ctime>
 
@@ -35,7 +36,7 @@ namespace CppCLRWinFormsProject {
 			space = BufferedGraphicsManager::Current;
 			buffer = space->Allocate(panel, pnl->ClientRectangle);
 			player = new Player(bmpPlayer->Width / 4, bmpPlayer->Height / 4);
-
+			map = new Map(bmpMap->Width, bmpMap->Height, *player);
 			sonido = gcnew Media::SoundPlayer();
 
 			gameService = new GameService();
@@ -56,6 +57,14 @@ namespace CppCLRWinFormsProject {
 	private: System::Windows::Forms::Timer^ timer1;
 	protected:
 	private: System::ComponentModel::IContainer^ components;
+
+	private: System::Windows::Forms::ToolStripMenuItem^ menuToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ instruccionesToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ salirToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^ creditosToolStripMenuItem;
+	private: System::Windows::Forms::Panel^ pnlMenu;
+	private: System::Windows::Forms::Label^ lblMenu;
+	private: System::Windows::Forms::Panel^ pnl;
 
 	private:
 		Graphics^ panel;
@@ -123,14 +132,17 @@ namespace CppCLRWinFormsProject {
 		   }
 #pragma endregion
 	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e) {
-		buffer->Graphics->Clear(Color::DarkSlateGray);
+		buffer->Graphics->Clear(Color::Black);
 
-		buffer->Graphics->DrawImage(bmpMap, -250, 0, bmpMap->Width, bmpMap->Height);
+		//buffer->Graphics->DrawImage(bmpMap, 0, 0, bmpMap->Width/4, bmpMap->Height/4);
+		map->draw(buffer->Graphics, bmpMap, *player);
 
 		gameService->moveEveryThing(buffer->Graphics);
 
 		player->draw(buffer->Graphics, bmpPlayer);
+		
 		gameService->drawEveryThing(buffer->Graphics, bmpEnemy);
+
 
 		if (gameService->getCountEnemiesDelete() == 3) {
 			gameService->setIsFinish(true);
@@ -175,12 +187,10 @@ namespace CppCLRWinFormsProject {
 			else timer1->Enabled = true;
 			break;
 		case Keys::Space:
-			//TODO: Implementar funcionalidab
+			//TODO: Implementar funcionalidad
 			break;
 		}
-
-
-
 	}
+
 	};
 }
